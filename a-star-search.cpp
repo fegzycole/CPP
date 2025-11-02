@@ -13,7 +13,9 @@ enum class State
     kEmpty,
     kObstacle,
     kClosed,
-    kPath
+    kPath,
+    kStart,
+    kFinish,
 };
 
 vector<State> ParseLine(string line)
@@ -80,11 +82,13 @@ string CellString(State cell)
     switch (cell)
     {
     case State::kObstacle:
-        return "⛰️   ";
-    case State::kClosed:
-        return "⚪   ";
+        return "⛰   ";
     case State::kPath:
         return "🚗   ";
+    case State::kStart:
+        return "🚦   ";
+    case State::kFinish:
+        return "🏁   ";
     default:
         return "0   ";
     }
@@ -177,7 +181,13 @@ vector<vector<State>> Search(vector<vector<State>> &board, array<int, 2> start, 
 
         if (x == goal[0] && y == goal[1])
         {
-            cout << "Goal found!\n";
+            const int init_x = start[0];
+            const int init_y = start[1];
+            const int goal_x = goal[0];
+            const int goal_y = goal[1];
+
+            board[init_x][init_y] = State::kStart;
+            board[goal_x][goal_y] = State::kFinish;
 
             return board;
         }
